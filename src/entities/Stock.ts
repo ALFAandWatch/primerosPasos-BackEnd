@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+   Entity,
+   PrimaryGeneratedColumn,
+   Column,
+   ManyToOne,
+   CreateDateColumn,
+} from 'typeorm';
 import { Usuario } from './Usuario';
 
 @Entity()
@@ -17,4 +23,7 @@ export class Stock {
 
    @ManyToOne(() => Usuario, (usuario) => usuario.stock)
    usuario!: Usuario;
+
+   @CreateDateColumn({ type: 'timestamp' })
+   fechaRegistro!: Date;
 }

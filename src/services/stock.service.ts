@@ -4,10 +4,10 @@ import { stockDTO } from '../DTOs/stockDTO';
 import { Stock } from '../entities/Stock';
 import { Usuario } from '../entities/Usuario';
 
-export const registrarStockService = async (data: stockDTO[]) => {
-   const stockRepo = AppDataSource.getRepository(Stock);
-   const usuarioRepo = AppDataSource.getRepository(Usuario);
+const stockRepo = AppDataSource.getRepository(Stock);
+const usuarioRepo = AppDataSource.getRepository(Usuario);
 
+export const registrarStockService = async (data: stockDTO[]) => {
    if (data.length === 0) {
       throw new Error('No se recibieron movimientos de stock');
    }
@@ -51,9 +51,6 @@ export const registrarStockService = async (data: stockDTO[]) => {
 };
 
 export const mostrarStockPorEmpresaIdService = async (usuarioId: number) => {
-   const stockRepo = AppDataSource.getRepository(Stock);
-   const usuarioRepo = AppDataSource.getRepository(Usuario);
-
    const usuario = await usuarioRepo.findOneBy({ id: usuarioId });
    if (!usuario) {
       throw new Error('Empresa no encontrada');
@@ -65,4 +62,30 @@ export const mostrarStockPorEmpresaIdService = async (usuarioId: number) => {
    });
 
    return stockDeLaEmpresa;
+};
+
+// ============================
+// RUTAS DE ADMIN
+// ============================
+
+export const mostrarStockLLService = async (
+   offset: number = 0,
+   limit: number = 15,
+   usuarioId?: number
+) => {
+   const where: any = {};
+
+   if (usuarioId) {
+      where.usuario = { id: usuarioId }; // ajusta según tu entidad
+   }
+
+   const [items, total] = await stockRepo.findAndCount({
+      relations: ['usuario'],
+      skip: offset,
+      take: limit,
+      where,
+      order: { fechaRegistro: 'DESC' },
+   });
+
+   return { items, total };
 };

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import {
+   mostrarStockLLService,
    mostrarStockPorEmpresaIdService,
    registrarStockService,
 } from '../services/stock.service';
@@ -36,6 +37,31 @@ export const mostrarStockPorEmpresaIdController = async (
       const empresaId = Number(id);
       const stock = await mostrarStockPorEmpresaIdService(empresaId);
       res.status(200).json(stock);
+      return;
+   } catch (error) {
+      console.log(error);
+      res.status(500).json({ error: 'Error al obtener el stock' });
+   }
+};
+
+// ============================
+// RUTAS DE ADMIN
+// ============================
+
+export const mostrarStockLLController = async (req: Request, res: Response) => {
+   try {
+      const offset = Number(req.query.offset) || 0;
+      const limit = Number(req.query.limit) || 20;
+      const usuarioId = req.query.usuarioId
+         ? Number(req.query.usuarioId)
+         : undefined;
+
+      const { items, total } = await mostrarStockLLService(
+         Number(offset),
+         Number(limit),
+         Number(usuarioId)
+      );
+      res.status(200).json({ items, total });
       return;
    } catch (error) {
       console.log(error);

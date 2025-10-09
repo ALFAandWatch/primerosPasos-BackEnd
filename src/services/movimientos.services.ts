@@ -3,10 +3,10 @@ import { movimientoDTO } from '../DTOs/movimientoDTO';
 import { Movimiento } from '../entities/Movimiento';
 import { Usuario } from '../entities/Usuario';
 
-export const crearMovimientoService = async (movimientos: movimientoDTO[]) => {
-   const movimientoRepo = AppDataSource.getRepository(Movimiento);
-   const usuarioRepo = AppDataSource.getRepository(Usuario);
+const movimientoRepo = AppDataSource.getRepository(Movimiento);
+const usuarioRepo = AppDataSource.getRepository(Usuario);
 
+export const crearMovimientoService = async (movimientos: movimientoDTO[]) => {
    const resultados: Movimiento[] = [];
 
    for (const mov of movimientos) {
@@ -36,10 +36,34 @@ export const crearMovimientoService = async (movimientos: movimientoDTO[]) => {
 };
 
 export const mostrarTodosLosMovimientosService = async () => {
-   const movimientoRepo = AppDataSource.getRepository(Movimiento);
-
    const movimientos = await movimientoRepo.find({
       relations: ['usuario'],
    });
    return movimientos;
 };
+
+// ============================
+// RUTAS DE ADMIN
+// ============================
+
+// export const mostrarMovimientosLLService = async (
+//    offset: number = 0,
+//    limit: number = 15,
+//    usuarioId?: number
+// ) => {
+//    const where: any = {};
+
+//    if (usuarioId) {
+//       where.usuario = { id: usuarioId }; // ajusta según tu entidad
+//    }
+
+//    const [items, total] = await movimientoRepo.findAndCount({
+//       relations: ['usuario'],
+//       skip: offset,
+//       take: limit,
+//       where,
+//       order: { fechaRegistro: 'DESC' },
+//    });
+
+//    return { items, total };
+// };
