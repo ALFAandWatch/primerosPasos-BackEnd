@@ -38,7 +38,11 @@ empleadosRouter.delete(
    verifyToken,
    eliminarEmpleadoController
 );
+
+// ============================
 // RUTAS DE ADMIN
+// ============================
+
 empleadosRouter.get(
    '/listaAdmin',
    verifyToken,

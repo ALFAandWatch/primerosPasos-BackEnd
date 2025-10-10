@@ -1,3 +1,4 @@
+import { FindOptionsWhere } from 'typeorm';
 import { AppDataSource } from '../config/data-source';
 import { movimientoDTO } from '../DTOs/movimientoDTO';
 import { Movimiento } from '../entities/Movimiento';
@@ -46,24 +47,35 @@ export const mostrarTodosLosMovimientosService = async () => {
 // RUTAS DE ADMIN
 // ============================
 
-// export const mostrarMovimientosLLService = async (
-//    offset: number = 0,
-//    limit: number = 15,
-//    usuarioId?: number
-// ) => {
-//    const where: any = {};
+export const mostrarMovimientosLLService = async (
+   offset: number = 0,
+   limit: number = 15,
+   usuarioId?: number,
+   filters?: {
+      tipo?: 'venta' | 'compra';
+      formaPago?: 'contado' | 'credito';
+   }
+) => {
+   const where: FindOptionsWhere<Movimiento> = { usuario: undefined };
 
-//    if (usuarioId) {
-//       where.usuario = { id: usuarioId }; // ajusta según tu entidad
-//    }
+   // filtro por usuario
+   if (usuarioId) where.usuario = { id: usuarioId } as any;
 
-//    const [items, total] = await movimientoRepo.findAndCount({
-//       relations: ['usuario'],
-//       skip: offset,
-//       take: limit,
-//       where,
-//       order: { fechaRegistro: 'DESC' },
-//    });
+   // filtros opcionales
+   if (filters?.tipo) where.tipo = filters.tipo;
+   if (filters?.formaPago) where.formaPago = filters.formaPago;
 
-//    return { items, total };
-// };
+   const [items, total] = await movimientoRepo.findAndCount({
+      relations: ['usuario'],
+      where,
+      order: { fecha: 'DESC' }, // siempre los más recientes primero
+      skip: offset,
+      take: limit,
+   });
+
+   return {
+      items,
+      total,
+      hasMore: offset + items.length < total,
+   };
+};

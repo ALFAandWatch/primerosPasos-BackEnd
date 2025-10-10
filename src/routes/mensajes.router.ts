@@ -8,6 +8,7 @@ import {
    obtenerTodosLosMensajesController,
 } from '../controllers/mensajes.controller';
 import { verifyToken } from '../middlewares/verifyTokenMiddleware';
+import { verifyAdmin } from '../middlewares/verifyAdminMiddleware';
 
 export const mensajesRouter = Router();
 
@@ -29,3 +30,32 @@ mensajesRouter.get(
    obtenerMensajePorIdController
 );
 mensajesRouter.patch('/:id/leido', verifyToken, marcarComoLeidoController);
+
+// ============================
+// RUTAS DE ADMIN
+// ============================
+
+mensajesRouter.get(
+   '/allAdmin/:id',
+   verifyToken,
+   verifyAdmin,
+   obtenerTodosLosMensajesController
+);
+mensajesRouter.get(
+   '/recibidosAdmin/:id',
+   verifyToken,
+   verifyAdmin,
+   obtenerMensajesRecibidosController
+);
+mensajesRouter.get(
+   '/enviadosAdmin/:id',
+   verifyToken,
+   verifyAdmin,
+   obtenerMensajesEnviadosController
+);
+mensajesRouter.get(
+   '/obtenerPorIdAdmin/:id',
+   verifyToken,
+   verifyAdmin,
+   obtenerMensajePorIdController
+);

@@ -1,11 +1,13 @@
 import { Router } from 'express';
 import {
    crearMovimientoController,
+   mostrarMovimientosLLController,
    mostrarTodosLosMovimientosController,
 } from '../controllers/movimientos.controller';
 import { verifyToken } from '../middlewares/verifyTokenMiddleware';
+import { verifyAdmin } from '../middlewares/verifyAdminMiddleware';
 
-const movimientosRouter = Router();
+export const movimientosRouter = Router();
 
 movimientosRouter.post(
    '/crearMovimientos',
@@ -17,5 +19,9 @@ movimientosRouter.get(
    verifyToken,
    mostrarTodosLosMovimientosController
 );
-
-export default movimientosRouter;
+movimientosRouter.get(
+   '/mostrarMovimientosLL',
+   verifyToken,
+   verifyAdmin,
+   mostrarMovimientosLLController
+);

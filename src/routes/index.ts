@@ -1,11 +1,11 @@
 import { Router } from 'express';
 import authRouter from './auth.router';
 import empresasRouter from './empresas.router';
-import movimientosRouter from './movimientos.router';
 import { empleadosRouter } from './empleados.router';
 import { horarioRouter } from './horarios.router';
 import { stockRouter } from './stock.router';
 import { mensajesRouter } from './mensajes.router';
+import { movimientosRouter } from './movimientos.router';
 
 const router = Router();
 
