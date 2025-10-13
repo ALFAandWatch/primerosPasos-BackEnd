@@ -3,11 +3,11 @@ import { horarioDTO } from '../DTOs/horarioDTO';
 import { Empleado } from '../entities/Empleado';
 import { Horario } from '../entities/Horario';
 
+const horarioRepo = AppDataSource.getRepository(Horario);
+const empleadoRepo = AppDataSource.getRepository(Empleado);
+
 export const registrarHorarioService = async (data: horarioDTO) => {
    const { empleadoId, fecha } = data;
-
-   const horarioRepo = AppDataSource.getRepository(Horario);
-   const empleadoRepo = AppDataSource.getRepository(Empleado);
 
    const empleado = await empleadoRepo.findOneBy({ id: empleadoId });
    if (!empleado) {
@@ -38,8 +38,6 @@ export const registrarHorarioService = async (data: horarioDTO) => {
 };
 
 export const obtenerHorariosEmpleadoService = async (empleadoId: number) => {
-   const horarioRepo = AppDataSource.getRepository(Horario);
-
    const horarios = await horarioRepo.find({
       where: { empleado: { id: empleadoId } },
       order: { fecha: 'DESC' },
@@ -53,9 +51,6 @@ export const obtenerHorarioDeHoyService = async (
    empleadoId: number,
    fecha: string
 ) => {
-   const horarioRepo = AppDataSource.getRepository(Horario);
-   const empleadoRepo = AppDataSource.getRepository(Empleado);
-
    const empleado = await empleadoRepo.findOneBy({ id: empleadoId });
    if (!empleado) {
       return null;

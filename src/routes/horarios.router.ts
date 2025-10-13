@@ -14,7 +14,7 @@ horarioRouter.post(
    registrarHorarioController
 );
 horarioRouter.get(
-   '/obtenerHorarios',
+   '/obtenerHorarios/:id',
    verifyToken,
    obtenerHorariosEmpleadoController
 );

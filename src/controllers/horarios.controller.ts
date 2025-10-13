@@ -28,13 +28,14 @@ export const obtenerHorariosEmpleadoController = async (
    res: Response
 ) => {
    try {
-      const { empleadoId } = req.params;
-      if (!empleadoId || isNaN(Number(empleadoId))) {
+      const { id } = req.params;
+      const empleadoId = Number(id);
+      if (!empleadoId || isNaN(empleadoId)) {
          res.status(400).json({ message: 'EmpleadoId inválido' });
          return;
       }
 
-      const horarios = await obtenerHorariosEmpleadoService(Number(empleadoId));
+      const horarios = await obtenerHorariosEmpleadoService(empleadoId);
       res.status(200).json(horarios);
    } catch (error: any) {
       console.error('Error en obtenerHorariosEmpleadoController:', error);

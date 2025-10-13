@@ -77,14 +77,29 @@ export const loginUsuarioController = async (req: Request, res: Response) => {
 
       const loginExistoso = await loginUsuarioService(dataLogin);
 
+      res.cookie('token', loginExistoso.token, {
+         httpOnly: true, // evita acceso desde JS del frontend
+         secure: process.env.NODE_ENV === 'production',
+         sameSite: 'strict',
+         maxAge: 24 * 60 * 60 * 1000, // 1 día
+      });
+
       const { credencial, ...usuarioSinPassword } = loginExistoso.usuario;
 
       res.status(200).json({
          message: loginExistoso.message,
-         token: loginExistoso.token,
          usuario: usuarioSinPassword,
       });
    } catch (error: any) {
       res.status(401).json({ message: 'Email o contraseña incorrectos' });
    }
+};
+
+export const logoutUsuarioController = (req: Request, res: Response) => {
+   res.clearCookie('token', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+   });
+   res.status(200).json({ message: 'Logout exitoso' });
 };

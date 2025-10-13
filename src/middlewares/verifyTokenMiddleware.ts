@@ -1,22 +1,20 @@
 import { Request, Response, NextFunction } from 'express';
-import jwt from 'jsonwebtoken';
-import { JwtPayload } from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
-const SECRET_KEY = process.env.JWT_SECRET || 'mi_secreto'; // deberías usar .env
+const SECRET_KEY = process.env.JWT_SECRET || 'mi_secreto';
 
 export const verifyToken = (
    req: Request,
    res: Response,
    next: NextFunction
 ) => {
-   const authHeader = req.headers['authorization'];
-   const token = authHeader && authHeader.split(' ')[1]; // extrae el token después de "Bearer"
+   // Obtener el token desde las cookies
+   const token = req.cookies?.token;
 
    if (!token) {
-      res.status(401).json({
-         message: 'Acceso denegado. No se encontró token.',
+      return res.status(401).json({
+         message: 'Acceso denegado. No se encontró token en las cookies.',
       });
-      return;
    }
 
    try {
@@ -24,7 +22,6 @@ export const verifyToken = (
       (req as any).user = decoded; // guardamos los datos del token en req.user
       next();
    } catch (err) {
-      res.status(403).json({ message: 'Token inválido o expirado.' });
-      return;
+      return res.status(403).json({ message: 'Token inválido o expirado.' });
    }
 };
