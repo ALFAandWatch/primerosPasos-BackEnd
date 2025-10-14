@@ -6,6 +6,7 @@ import { horarioRouter } from './horarios.router';
 import { stockRouter } from './stock.router';
 import { mensajesRouter } from './mensajes.router';
 import { movimientosRouter } from './movimientos.router';
+import { archivoRouter } from './archivos.router';
 
 const router = Router();
 
@@ -16,5 +17,6 @@ router.use('/empleados', empleadosRouter);
 router.use('/horarios', horarioRouter);
 router.use('/stock', stockRouter);
 router.use('/mensajes', mensajesRouter);
+router.use('/archivos', archivoRouter);
 
 export default router;

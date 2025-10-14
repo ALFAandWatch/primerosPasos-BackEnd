@@ -14,6 +14,7 @@ import { Stock } from './Stock';
 import { Movimiento } from './Movimiento';
 import { Empleado } from './Empleado';
 import { Mensaje } from './Mensaje';
+import { Archivo } from './Archivo';
 
 @Entity()
 export class Usuario {
@@ -70,4 +71,9 @@ export class Usuario {
 
    @OneToMany(() => Mensaje, (mensaje) => mensaje.destinatario)
    mensajesRecibidos?: Mensaje[];
+
+   @OneToMany(() => Archivo, (archivo) => archivo.usuario, {
+      cascade: true,
+   })
+   archivos!: Archivo[];
 }

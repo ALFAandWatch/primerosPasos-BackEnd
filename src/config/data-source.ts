@@ -8,6 +8,7 @@ import { Horario } from '../entities/Horario';
 import { Usuario } from '../entities/Usuario';
 import { Stock } from '../entities/Stock';
 import { Mensaje } from '../entities/Mensaje';
+import { Archivo } from '../entities/Archivo';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ export const AppDataSource = new DataSource({
       Empleado,
       Horario,
       Mensaje,
+      Archivo,
    ],
    migrations: [],
    subscribers: [],
