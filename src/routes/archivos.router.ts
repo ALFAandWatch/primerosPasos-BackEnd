@@ -2,7 +2,9 @@ import { Router } from 'express';
 import { verifyToken } from '../middlewares/verifyTokenMiddleware';
 import { upload } from '../middlewares/upload';
 import {
-   obtenerArchivosPorUsuarioIdController,
+   descargarArchivoController,
+   eliminarArchivoController,
+   obtenerArchivosFiltrosController,
    subirImagenController,
 } from '../controllers/archivos.controller';
 
@@ -16,7 +18,11 @@ archivoRouter.post(
 );
 
 archivoRouter.get(
-   '/obtenerImagenPorEmpleadoId/:id',
+   '/obtenerImagenesFiltros/:id',
    verifyToken,
-   obtenerArchivosPorUsuarioIdController
+   obtenerArchivosFiltrosController
 );
+
+archivoRouter.delete('/eliminarArchivo/:id', eliminarArchivoController);
+
+archivoRouter.get('/descargarArchivo/:id', descargarArchivoController);

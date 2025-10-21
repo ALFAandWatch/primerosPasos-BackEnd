@@ -76,4 +76,10 @@ export class Usuario {
       cascade: true,
    })
    archivos!: Archivo[];
+
+   @OneToMany(() => Archivo, (archivo) => archivo.remitente)
+   archivosEnviados!: Archivo[];
+
+   @OneToMany(() => Archivo, (archivo) => archivo.destinatario)
+   archivosRecibidos!: Archivo[];
 }

@@ -6,14 +6,7 @@ import {
    CreateDateColumn,
 } from 'typeorm';
 import { Usuario } from './Usuario';
-
-export enum ArchivoTipo {
-   TICKET = 'ticket',
-   RECIBO = 'recibo',
-   PDF = 'pdf',
-   IMAGEN = 'imagen',
-   OTRO = 'otro',
-}
+import { ArchivoTipo } from '../enums/ArchivoTipo';
 
 @Entity()
 export class Archivo {
@@ -29,7 +22,7 @@ export class Archivo {
    @Column({
       type: 'enum',
       enum: ArchivoTipo,
-      default: ArchivoTipo.IMAGEN,
+      default: ArchivoTipo.OTRO,
    })
    tipo!: ArchivoTipo;
 
@@ -44,4 +37,14 @@ export class Archivo {
 
    @CreateDateColumn()
    fechaSubida!: Date;
+
+   @ManyToOne(() => Usuario, (usuario) => usuario.archivosEnviados, {
+      onDelete: 'CASCADE',
+   })
+   remitente!: Usuario;
+
+   @ManyToOne(() => Usuario, (usuario) => usuario.archivosRecibidos, {
+      onDelete: 'CASCADE',
+   })
+   destinatario!: Usuario;
 }
