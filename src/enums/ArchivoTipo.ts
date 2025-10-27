@@ -5,4 +5,10 @@ export enum ArchivoTipo {
    DGI = 'dgi',
    BPS = 'bps',
    OTRO = 'otros',
+
+   //ADMIN
+   PAGOS = 'pagos',
+   SUELDOS = 'sueldos',
+   STOCK = 'stock',
+   BALANCES = 'balances',
 }
