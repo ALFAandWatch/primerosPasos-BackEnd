@@ -92,8 +92,12 @@ export const listarEmpleadosAdminService = async (
 ) => {
    const skip = (page - 1) * limit;
 
+   const where = search
+      ? [{ nombre: ILike(`%${search}%`) }, { apellido: ILike(`%${search}%`) }]
+      : {};
+
    const [empleados, total] = await empleadoRepo.findAndCount({
-      where: search ? { nombre: ILike(`%${search}%`) } : {},
+      where,
       relations: ['usuario'],
       withDeleted: true,
       skip,
