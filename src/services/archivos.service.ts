@@ -5,11 +5,16 @@ import { Usuario } from '../entities/Usuario';
 import { RolEnum } from '../enums/RolEnum';
 import fs from 'fs/promises';
 import path from 'path';
+import { formatearTipoArchivo } from '../utils/formatearTipoArchivo';
 
 const archivoRepo = AppDataSource.getRepository(Archivo);
 const usuarioRepo = AppDataSource.getRepository(Usuario);
 
 export const subirImagenService = async (data: archivoDTO) => {
+   if (!data.nombre || !data.url) {
+      throw new Error('Datos del archivo incompletos');
+   }
+
    const remitente = await usuarioRepo.findOne({
       where: { id: data.remitenteId },
    });
@@ -31,8 +36,20 @@ export const subirImagenService = async (data: archivoDTO) => {
       if (!destinatario) throw new Error('No se encontró un administrador');
    }
 
+   // Generar título del archivo
+   const fecha = new Date();
+   const fechaFormateada = fecha.toLocaleDateString('es-UY', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+   });
+
+   const tipoLegible = formatearTipoArchivo(data.tipo);
+   const titulo = `Registro ${tipoLegible} - ${fechaFormateada}`;
+
    const archivo = archivoRepo.create({
       nombre: data.nombre,
+      titulo,
       url: data.url,
       tipo: data.tipo,
       descripcion: data.descripcion,

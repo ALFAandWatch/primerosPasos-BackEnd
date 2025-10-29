@@ -19,6 +19,9 @@ export class Archivo {
    @Column()
    url!: string;
 
+   @Column({ type: 'varchar', length: 255 })
+   titulo!: string;
+
    @Column({
       type: 'enum',
       enum: ArchivoTipo,
