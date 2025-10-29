@@ -3,4 +3,5 @@ export type mensajeDTO = {
    destinatarioId: number | 'admin';
    asunto: string;
    contenido: string;
+   mensajePadreId?: number;
 };

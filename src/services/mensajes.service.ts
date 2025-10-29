@@ -7,7 +7,8 @@ const mensajeRepo = AppDataSource.getRepository(Mensaje);
 const usuarioRepo = AppDataSource.getRepository(Usuario);
 
 export const enviarMensajeService = async (mensajeData: mensajeDTO) => {
-   const { remitenteId, destinatarioId, asunto, contenido } = mensajeData;
+   const { remitenteId, destinatarioId, asunto, contenido, mensajePadreId } =
+      mensajeData;
 
    const getUsuario = async (id: number | 'admin') => {
       const usuarioId = id === 'admin' ? 2 : id;
@@ -17,11 +18,23 @@ export const enviarMensajeService = async (mensajeData: mensajeDTO) => {
    const remitenteUsuario = await getUsuario(remitenteId);
    const destinatarioUsuario = await getUsuario(destinatarioId);
 
+   let mensajePadre = null;
+   if (mensajePadreId) {
+      mensajePadre = await mensajeRepo.findOne({
+         where: { id: mensajePadreId },
+      });
+
+      if (!mensajePadre) {
+         throw new Error('Mensaje padre no encontrado');
+      }
+   }
+
    const mensaje = mensajeRepo.create({
       remitente: remitenteUsuario,
       destinatario: destinatarioUsuario,
       contenido,
       asunto,
+      ...(mensajePadre ? { mensajePadre } : {}),
    });
 
    return await mensajeRepo.save(mensaje);
@@ -94,7 +107,7 @@ export const obtenerMensajePorIdService = async (
 ): Promise<Mensaje> => {
    const mensaje = await mensajeRepo.findOne({
       where: { id },
-      relations: ['remitente', 'destinatario'],
+      relations: ['remitente', 'destinatario', 'mensajePadre'],
    });
 
    if (!mensaje) throw new Error('Mensaje no encontrado');

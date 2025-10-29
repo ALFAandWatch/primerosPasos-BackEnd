@@ -5,6 +5,7 @@ import {
    Column,
    ManyToOne,
    CreateDateColumn,
+   OneToMany,
 } from 'typeorm';
 import { Usuario } from './Usuario';
 
@@ -28,6 +29,14 @@ export class Mensaje {
       eager: true,
    })
    destinatario!: Usuario;
+
+   @ManyToOne(() => Mensaje, (mensaje) => mensaje.respuestas, {
+      nullable: true,
+   })
+   mensajePadre?: Mensaje;
+
+   @OneToMany(() => Mensaje, (mensaje) => mensaje.mensajePadre)
+   respuestas?: Mensaje[];
 
    @CreateDateColumn({ type: 'timestamp' })
    fechaEnvio!: Date;
