@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import {
    crearMovimientoService,
+   deleteMovimientoService,
    mostrarMovimientosLLService,
    mostrarTodosLosMovimientosService,
 } from '../services/movimientos.services';
@@ -78,6 +79,24 @@ export const mostrarMovimientosLLController = async (
       console.error(error);
       return res.status(500).json({
          error: 'Error al obtener los movimientos',
+         details: error.message || error,
+      });
+   }
+};
+
+export const deleteMovimientoController = (req: Request, res: Response) => {
+   try {
+      const { id } = req.params;
+      const movimiento = deleteMovimientoService(Number(id));
+      res.status(200).json({
+         message: 'Movimiento eliminado correctamente',
+         data: movimiento,
+      });
+      return;
+   } catch (error: any) {
+      console.error(error);
+      return res.status(500).json({
+         error: 'Error al eliminar el movimiento',
          details: error.message || error,
       });
    }

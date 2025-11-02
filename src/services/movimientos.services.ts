@@ -79,3 +79,15 @@ export const mostrarMovimientosLLService = async (
       hasMore: offset + items.length < total,
    };
 };
+
+export const deleteMovimientoService = async (id: number) => {
+   const movimiento = await movimientoRepo.findOne({ where: { id } });
+
+   if (!movimiento) {
+      throw new Error('Movimiento no encontrado');
+   }
+
+   await movimientoRepo.remove(movimiento);
+
+   return { message: 'Movimiento eliminado correctamente', id };
+};

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
    crearMovimientoController,
+   deleteMovimientoController,
    mostrarMovimientosLLController,
    mostrarTodosLosMovimientosController,
 } from '../controllers/movimientos.controller';
@@ -24,4 +25,10 @@ movimientosRouter.get(
    verifyToken,
    verifyAdmin,
    mostrarMovimientosLLController
+);
+movimientosRouter.delete(
+   '/borrarMovimiento',
+   verifyToken,
+   verifyAdmin,
+   deleteMovimientoController
 );
