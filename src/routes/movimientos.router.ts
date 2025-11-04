@@ -2,7 +2,9 @@ import { Router } from 'express';
 import {
    crearMovimientoController,
    deleteMovimientoController,
-   mostrarMovimientosLLController,
+   editarMovimientoController,
+   mostrarMovimientosController,
+   mostrarRegistrosAlUsuarioController,
    mostrarTodosLosMovimientosController,
 } from '../controllers/movimientos.controller';
 import { verifyToken } from '../middlewares/verifyTokenMiddleware';
@@ -20,14 +22,27 @@ movimientosRouter.get(
    verifyToken,
    mostrarTodosLosMovimientosController
 );
+
+movimientosRouter.get(
+   '/mostrarRegistrosAlUsuario',
+   verifyToken,
+   mostrarRegistrosAlUsuarioController
+);
+// RUTAS ADMIN
 movimientosRouter.get(
    '/mostrarMovimientosLL',
    verifyToken,
    verifyAdmin,
-   mostrarMovimientosLLController
+   mostrarMovimientosController
+);
+movimientosRouter.patch(
+   '/editarMovimiento/:id',
+   verifyToken,
+   verifyAdmin,
+   editarMovimientoController
 );
 movimientosRouter.delete(
-   '/borrarMovimiento',
+   '/borrarMovimiento/:id',
    verifyToken,
    verifyAdmin,
    deleteMovimientoController

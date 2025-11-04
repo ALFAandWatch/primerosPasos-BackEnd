@@ -2,7 +2,9 @@ import { Request, Response } from 'express';
 import {
    crearMovimientoService,
    deleteMovimientoService,
-   mostrarMovimientosLLService,
+   editarMovimientoService,
+   mostrarMovimientosService,
+   mostrarRegistrosAlUsuarioService,
    mostrarTodosLosMovimientosService,
 } from '../services/movimientos.services';
 
@@ -24,6 +26,36 @@ export const crearMovimientoController = async (
       console.error(error);
       return res.status(500).json({
          error: 'Error al guardar los movimientos',
+         details: error.message || error,
+      });
+   }
+};
+
+export const mostrarRegistrosAlUsuarioController = async (
+   req: Request,
+   res: Response
+) => {
+   try {
+      const { usuarioId, tipo, formaPago } = req.query;
+
+      const filters = {
+         tipo: tipo as 'venta' | 'compra' | undefined,
+         formaPago: formaPago as 'contado' | 'credito' | undefined,
+      };
+
+      const movimientos = await mostrarRegistrosAlUsuarioService(
+         usuarioId ? Number(usuarioId) : undefined,
+         filters
+      );
+
+      return res.status(200).json({
+         message: 'Movimientos obtenidos correctamente',
+         data: movimientos,
+      });
+   } catch (error: any) {
+      console.error(error);
+      return res.status(500).json({
+         error: 'Error al obtener los movimientos',
          details: error.message || error,
       });
    }
@@ -52,21 +84,19 @@ export const mostrarTodosLosMovimientosController = async (
 // RUTAS DE ADMIN
 // ============================
 
-export const mostrarMovimientosLLController = async (
+export const mostrarMovimientosController = async (
    req: Request,
    res: Response
 ) => {
    try {
-      const { offset, limit, usuarioId, tipo, formaPago } = req.query;
+      const { usuarioId, tipo, formaPago } = req.query;
 
       const filters = {
          tipo: tipo as 'venta' | 'compra' | undefined,
          formaPago: formaPago as 'contado' | 'credito' | undefined,
       };
 
-      const movimientos = await mostrarMovimientosLLService(
-         Number(offset) || 0,
-         Number(limit) || 15,
+      const movimientos = await mostrarMovimientosService(
          usuarioId ? Number(usuarioId) : undefined,
          filters
       );
@@ -80,6 +110,40 @@ export const mostrarMovimientosLLController = async (
       return res.status(500).json({
          error: 'Error al obtener los movimientos',
          details: error.message || error,
+      });
+   }
+};
+
+export const editarMovimientoController = async (
+   req: Request,
+   res: Response
+) => {
+   try {
+      const { id } = req.params;
+      const data = req.body;
+
+      // Validar ID
+      if (!id || isNaN(Number(id))) {
+         return res.status(400).json({
+            ok: false,
+            msg: 'ID inválido',
+         });
+      }
+
+      const movimientoEditado = await editarMovimientoService(Number(id), data);
+
+      return res.status(200).json({
+         ok: true,
+         msg: 'Movimiento editado correctamente',
+         data: movimientoEditado,
+      });
+   } catch (error: any) {
+      console.error('Error al editar movimiento:', error);
+
+      return res.status(500).json({
+         ok: false,
+         msg: 'Error al editar movimiento',
+         error: error.message || error,
       });
    }
 };

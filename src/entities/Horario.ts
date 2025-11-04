@@ -17,7 +17,7 @@ export class Horario {
 
    @Column({
       type: 'enum',
-      enum: ['presente', 'falta', 'salud', 'vacaciones', ''],
+      enum: ['presente', 'falta', 'salud', 'vacaciones', 'libre', ''],
       default: 'presente',
    })
    estado!: string;
