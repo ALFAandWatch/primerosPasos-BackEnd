@@ -59,6 +59,7 @@ export const mostrarStockPorEmpresaIdService = async (usuarioId: number) => {
    const stockDeLaEmpresa = await stockRepo.find({
       where: { usuario: { id: usuarioId } },
       relations: ['usuario'],
+      order: { fechaRegistro: 'DESC' },
    });
 
    return stockDeLaEmpresa;
